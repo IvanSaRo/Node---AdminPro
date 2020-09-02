@@ -1,10 +1,11 @@
 const express = require('express');
-const { dbConnection } = require('./db/config');
 require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
-// 
-// mean_user
+
+
+const { dbConnection } = require('./db/config');
 
 dbConnection();
 
