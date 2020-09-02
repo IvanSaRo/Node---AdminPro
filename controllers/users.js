@@ -14,14 +14,38 @@ const createUsuarios = async (req, res) => {
     
     const { email, password, name } = req.body;
 
-    const user = new Usuario( req.body );
-
-    await user.save();
+    try {
+        // comprobar si existe el email
+        const emailExists =  await Usuario.findOne({ email });
+        
+        if(emailExists){
+            return res.status(400).json({
+                ok: false,
+                msg: 'El correo ya está registrado'
+            });
+        }
+        
+        const user = new Usuario( req.body );
+        await user.save();
+        
+        res.json({
+            ok: true, 
+            user
+        });
     
-    res.json({
-        ok: true, 
-        user
-    });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            ok: false,
+            msg: 'Error, revisar logs'
+        })
+    }
+    
+    
+    
+
+    
+    
 }
 
 
