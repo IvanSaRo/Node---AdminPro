@@ -1,3 +1,5 @@
+const { response } = require('express');// es un tipado por defecto para la res 
+const { validationResult } = require('express-validator');
 const Usuario = require('../models/user');
 
 const getUsuarios = async (req, res) => {
@@ -10,9 +12,18 @@ const getUsuarios = async (req, res) => {
     });
 }
 
-const createUsuarios = async (req, res) => {
+const createUsuarios = async (req, res = response) => {
     
     const { email, password, name } = req.body;
+
+    const errors = validationResult( req );
+
+    if (!errors.isEmpty()) {
+        return res.status(400).json({
+            ok: false,
+            errors: errors.mapped()
+        })
+    }
 
     try {
         // comprobar si existe el email
