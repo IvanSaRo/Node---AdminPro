@@ -1,11 +1,13 @@
 const express = require('express');
 const { dbConnection } = require('./db/config');
+require('dotenv').config();
 
 const app = express();
 // 
 // mean_user
 
 dbConnection();
+
 
 
 
@@ -20,6 +22,6 @@ app.get('/', (req, res) => {
 })
 
 
-app.listen( 3000, () => {
-    console.log( "Corriendo en puerto 3000")
+app.listen( process.env.PORT, () => {
+    console.log( "Corriendo en puerto " + process.env.PORT)
 } )
