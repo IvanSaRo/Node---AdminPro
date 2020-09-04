@@ -1,5 +1,6 @@
 const { response } = require('express');// es un tipado por defecto para la res 
 const Usuario = require('../models/user');
+const bcrypt = require('bcryptjs');
 
 
 const getUsuarios = async (req, res) => {
@@ -14,7 +15,7 @@ const getUsuarios = async (req, res) => {
 
 const createUsuarios = async (req, res = response) => {
     
-    const { email, password, name } = req.body;
+    const { email, password } = req.body;
     try {
         // comprobar si existe el email
         const emailExists =  await Usuario.findOne({ email });
@@ -27,6 +28,14 @@ const createUsuarios = async (req, res = response) => {
         }
         
         const user = new Usuario( req.body );
+        
+        //Encriptar
+
+        const salt = bcrypt.genSaltSync();
+        user.password = bcrypt.hashSync( password, salt );
+        
+        
+        //Guardar usuario
         await user.save();
         
         res.json({
