@@ -61,27 +61,28 @@ const actualizarUsuario = async (req, res = response) => {
     }
 
     //TODO validar token google y comprobar si el usuario es el correcto
-    
+
     //Actualizaciones
-    const {password, google, email, ...campos} = req.body;
+    const { password, google, email, ...campos } = req.body;
     //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
-    
+
     if (usuarioDB.email != email) {
-        const existeEmail = await Usuario.findOne({ email });
-        if (existeEmail) {
-            return res.status(400).json({
-                ok: false,
-                msg: "Ya existe un usuario con ese mail",
-            });
-        }
+      const existeEmail = await Usuario.findOne({ email });
+      if (existeEmail) {
+        return res.status(400).json({
+          ok: false,
+          msg: "Ya existe un usuario con ese mail",
+        });
+      }
     }
     //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD
     // delete campos.password;
     // delete campos.google;
-    campos.email = email;
-    
-    const usarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, 
-                                                              {new: true, });
+    campos.email = email; // volvemos a meter el email ya tratado en el objeto
+
+    const usarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
+      new: true,
+    });
 
     res.json({
       ok: true,
@@ -95,8 +96,37 @@ const actualizarUsuario = async (req, res = response) => {
     });
   }
 };
+
+const borrarUsuario = async (req, res = response) => {
+  const uid = req.params.id;
+  try {
+    const usuarioDB = await Usuario.findById(uid);
+
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "No existe un usuario con ese id",
+      });
+    }
+
+    await Usuario.findByIdAndDelete(uid);
+
+    res.json({
+      ok: true,
+      msg: "Usuario borrado"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      ok: false,
+      msg: "Error en el borrado",
+    });
+  }
+};
+
 module.exports = {
   getUsuarios,
   createUsuarios,
   actualizarUsuario,
+  borrarUsuario,
 };
