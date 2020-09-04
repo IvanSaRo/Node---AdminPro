@@ -34,11 +34,12 @@ const UserSchema = Schema({
 });
 
 UserSchema.method('toJSON', function(){
-
+    //MODIFICA EL ASPECTO VISUAL COMO PUEDE HACERLO UN pipe(map(...)) EN EL FRONT, NO MODIFICA BD
+    //separamos del objeto tanto la propiedad __V como _id, entregaría un objeto con todas las prop menos __v y _id
     const { __v, _id, ...object} = this.toObject();
-
+    //creamos una nueva propiedad en el objeto y le cargamos _id(así nos lo da MongoDB por defecto)
     object.uid = _id;
-
+    // devolvemos el obj sin __v y con _id como uid
     return object;
 })
 
