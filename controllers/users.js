@@ -61,25 +61,25 @@ const actualizarUsuario = async (req, res = response) => {
     }
 
     //TODO validar token google y comprobar si el usuario es el correcto
-
+    
     //Actualizaciones
-    const campos = req.body;
-
-    if (usuarioDB.email === req.body.email) {
-      delete campos.email; //es el mismo que el grabado en ese usuario, puede seguir
-    } else {
-      const existeEmail = await Usuario.findOne({ email: req.body.email });
-      if (existeEmail) {
-        return res.status(400).json({
-          ok: false,
-          msg: "Ya existe un usuario con ese mail",
-        });
-      }
+    const {password, google, email, ...campos} = req.body;
+    //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
+    
+    if (usuarioDB.email != email) {
+        const existeEmail = await Usuario.findOne({ email });
+        if (existeEmail) {
+            return res.status(400).json({
+                ok: false,
+                msg: "Ya existe un usuario con ese mail",
+            });
+        }
     }
     //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD
-    delete campos.password;
-    delete campos.google;
-
+    // delete campos.password;
+    // delete campos.google;
+    campos.email = email;
+    
     const usarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, 
                                                               {new: true, });
 
