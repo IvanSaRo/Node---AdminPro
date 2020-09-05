@@ -1,6 +1,7 @@
 const { response } = require("express"); // es un tipado por defecto para la res
 const Usuario = require("../models/user");
 const bcrypt = require("bcryptjs");
+const { createJWT } = require("../helpers/jwt");
 
 const getUsuarios = async (req, res) => {
   const users = await Usuario.find({}, "name email role google");
@@ -26,10 +27,12 @@ const createUsuarios = async (req, res = response) => {
 
     const user = new Usuario(req.body);
 
-    //Encriptar
-
+    //Encriptar contraseña
     const salt = bcrypt.genSaltSync();
     user.password = bcrypt.hashSync(password, salt);
+
+    // Generar el Token (JWT)
+    const token = await createJWT( user.id );
 
     //Guardar usuario
     await user.save();
@@ -37,6 +40,7 @@ const createUsuarios = async (req, res = response) => {
     res.json({
       ok: true,
       user,
+      token
     });
   } catch (error) {
     console.log(error);
