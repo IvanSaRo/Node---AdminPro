@@ -24,6 +24,7 @@ createUsuarios
 
 router.put('/:id',
 [ 
+    validarJWT,
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('role', 'El rol es obligatorio').not().isEmpty(),
     check('email', 'El email válido es obligatorio').isEmail(),
@@ -31,7 +32,7 @@ router.put('/:id',
 ], 
 actualizarUsuario);
 
-router.delete('/:id', borrarUsuario);
+router.delete('/:id', validarJWT, borrarUsuario);
 
 
 
