@@ -10,7 +10,8 @@ const HospitalSchema = Schema({
   },
   user: {
       type: Schema.Types.ObjectId,//le decimos a mongoose que este esquema está relacionado con Usuario meidante el type y al ref
-      ref: 'Usuario'
+      ref: 'Usuario',
+      required: true
   }
 }, {collection: 'hospitales'});//con esto damos el nombre a la tabla de hospitales en la DB
 
