@@ -3,7 +3,7 @@ const Usuario = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { createJWT } = require("../helpers/jwt");
 
-const getUsuarios = async (req, res) => {
+const getUsers = async (req, res) => {
   const users = await Usuario.find({}, "name email role google");
 
   res.json({
@@ -13,7 +13,7 @@ const getUsuarios = async (req, res) => {
   });
 };
 
-const createUsuarios = async (req, res = response) => {
+const createUser = async (req, res = response) => {
   const { email, password } = req.body;
   try {
     // comprobar si existe el email
@@ -52,7 +52,7 @@ const createUsuarios = async (req, res = response) => {
   }
 };
 
-const actualizarUsuario = async (req, res = response) => {
+const putUser = async (req, res = response) => {
   const uid = req.params.id;
   try {
     //hemos de comprobar que el usuario existe
@@ -102,7 +102,7 @@ const actualizarUsuario = async (req, res = response) => {
   }
 };
 
-const borrarUsuario = async (req, res = response) => {
+const deleteUser = async (req, res = response) => {
   const uid = req.params.id;
   try {
     const usuarioDB = await Usuario.findById(uid);
@@ -130,8 +130,8 @@ const borrarUsuario = async (req, res = response) => {
 };
 
 module.exports = {
-  getUsuarios,
-  createUsuarios,
-  actualizarUsuario,
-  borrarUsuario,
+  getUsers,
+  createUser,
+  putUser,
+  deleteUser,
 };

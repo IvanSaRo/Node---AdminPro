@@ -2,14 +2,14 @@
 
 const { Router } = require('express');
 const { check } = require('express-validator');
-const { validarCampos } = require('../middlewares/validar-campos')
+const { validateFields } = require('../middlewares/validate-fields')
 
-const { getUsuarios, createUsuarios, actualizarUsuario, borrarUsuario } = require('../controllers/users');
-const {validarJWT} = require('../middlewares/validar-jwt');
+const { getUsers, createUser, putUser, deleteUser } = require('../controllers/users');
+const {validateJWT} = require('../middlewares/validate-jwt');
 
 const router = Router();
 
-router.get('/', validarJWT, getUsuarios);
+router.get('/', validateJWT, getUsers);
 
 
 router.post('/', 
@@ -17,22 +17,22 @@ router.post('/',
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('password', 'El password es obligatorio').not().isEmpty(),
     check('email', 'El email válido es obligatorio').isEmail(),
-    validarCampos,
+    validateFields,
 ],
-createUsuarios
+createUser
 );
 
 router.put('/:id',
 [ 
-    validarJWT,
+    validateJWT,
     check('name', 'El nombre es obligatorio').not().isEmpty(),
     check('role', 'El rol es obligatorio').not().isEmpty(),
     check('email', 'El email válido es obligatorio').isEmail(),
-    validarCampos
+    validateFields
 ], 
-actualizarUsuario);
+putUser);
 
-router.delete('/:id', validarJWT, borrarUsuario);
+router.delete('/:id', validateJWT, deleteUser);
 
 
 

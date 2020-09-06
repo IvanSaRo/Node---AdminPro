@@ -16,7 +16,8 @@ app.use(express.json());
 // BD
 dbConnection();
 
-app.use("/api/usuarios", require("./routes/users"));
+app.use("/api/users", require("./routes/users"));
+app.use("/api/hospitals", require("./routes/hospitals"));
 app.use("/api/login", require("./routes/auth"));
 
 app.listen(process.env.PORT, () => {
