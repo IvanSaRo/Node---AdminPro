@@ -4,12 +4,27 @@ const bcrypt = require("bcryptjs");
 const { createJWT } = require("../helpers/jwt");
 
 const getUsers = async (req, res) => {
-  const users = await Usuario.find({}, "name email role google");
+  const from = Number(req.query.from) || 0; //paginación
+
+  const [users, total] = await Promise.all([
+    Usuario.find({}, "name email role google")
+           .skip(from)
+           .limit(5),
+
+    Usuario.countDocuments(),
+  ]);
+// En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va a ser mas eficiente porque en vez de ejecutar ambas de manera secuencial lo harán de forma simultánea
+  /* const users = await Usuario
+                      .find({}, "name email role google")
+                      .skip( from )
+                      .limit( 5 );
+
+  const total = await Usuario.countDocuments(); */
 
   res.json({
     ok: true,
     users,
-    uid: req.uid
+    total,
   });
 };
 
@@ -33,7 +48,7 @@ const createUser = async (req, res = response) => {
     user.password = bcrypt.hashSync(password, salt);
 
     // Generar el Token (JWT)
-    const token = await createJWT( user.id );
+    const token = await createJWT(user.id);
 
     //Guardar usuario
     await user.save();
@@ -41,7 +56,7 @@ const createUser = async (req, res = response) => {
     res.json({
       ok: true,
       user,
-      token
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -118,7 +133,7 @@ const deleteUser = async (req, res = response) => {
 
     res.json({
       ok: true,
-      msg: "Usuario borrado"
+      msg: "Usuario borrado",
     });
   } catch (error) {
     console.log(error);
