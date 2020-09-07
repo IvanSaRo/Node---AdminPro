@@ -10,8 +10,8 @@ const login = async (req, res = response) => {
 
   try {
     //Verificar email
-    const usuarioDB = await Usuario.findOne({ email });
-    if (!usuarioDB) {
+    const userDB = await Usuario.findOne({ email });
+    if (!userDB) {
       return res.status(404).json({
         ok: false,
         msg: "Email no válido",
@@ -19,7 +19,7 @@ const login = async (req, res = response) => {
     }
 
     //Verificar password comparando el de body con el de BD
-    const validPassword = bcrypt.compareSync(password, usuarioDB.password);
+    const validPassword = bcrypt.compareSync(password, userDB.password);
     if (!validPassword) {
       return res.status(404).json({
         ok: false,
@@ -28,7 +28,7 @@ const login = async (req, res = response) => {
     }
 
     // Generar el Token (JWT)
-    const token = await createJWT( usuarioDB.id );
+    const token = await createJWT( userDB.id );
 
     res.json({
       ok: true,
