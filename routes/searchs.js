@@ -1,11 +1,12 @@
-// api/general/:search
+// api/general/
 
 const { Router } = require('express');
-const { getGeneral} = require('../controllers/searchs');
+const { getGeneral, getFromTable} = require('../controllers/searchs');
 const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
-router.get('/:searchs',validateJWT, getGeneral);
+router.get('/:search',validateJWT, getGeneral);
+router.get('/collection/:table/:search',validateJWT, getFromTable);
 
 module.exports = router;
