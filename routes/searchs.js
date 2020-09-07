@@ -1,4 +1,4 @@
-// api/general/
+// api/search
 
 const { Router } = require('express');
 const { getGeneral, getFromTable} = require('../controllers/searchs');

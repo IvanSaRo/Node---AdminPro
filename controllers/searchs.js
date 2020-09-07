@@ -1,4 +1,4 @@
-// getGeneral
+
 
 const { response } = require("express");
 

@@ -21,6 +21,7 @@ app.use("/api/hospitals", require("./routes/hospitals"));
 app.use("/api/doctors", require("./routes/doctors"));
 app.use("/api/login", require("./routes/auth"));
 app.use("/api/search", require("./routes/searchs"));
+app.use("/api/upload", require("./routes/uploads"));
 
 app.listen(process.env.PORT, () => {
   console.log("Corriendo en puerto " + process.env.PORT);
