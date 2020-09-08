@@ -3,9 +3,20 @@ const Doctor = require("../models/doctor");
 const Hospital = require("../models/hospital");
 
 const fs = require("fs");
+const hospital = require("../models/hospital");
+
+const deleteImg = (path) => {
+  // Ver si hay img anterior
+  if (fs.existsSync(path)) {
+    // borrar la img anterior en la carpeta
+    fs.unlinkSync(path);
+  }
+};
 
 const updateImg = async (table, id, archiveName) => {
-  console.log(table, id, archiveName);
+  let oldPath = "";
+
+  
   switch (table) {
     case "doctors":
       const doctor = await Doctor.findById(id);
@@ -13,20 +24,39 @@ const updateImg = async (table, id, archiveName) => {
         console.log("No se encontró ningún doctor");
         return false;
       }
-      // Ver si hay img anterior
-      const oldPath = `./uploads/doctors/${doctor.img}`;
-      if (fs.existsSync(oldPath)) {
-        // borrar la img anterior en la carpeta
-        fs.unlinkSync(oldPath);
-      }
+
+      oldPath = `./uploads/doctors/${doctor.img}`;
+      deleteImg(oldPath);
 
       doctor.img = archiveName;
       await doctor.save();
       return true;
     case "hospitals":
-      break;
+      const hospital = await Hospital.findById(id);
+      if (!hospital) {
+        console.log("No se encontró ningún hospital");
+        return false;
+      }
+
+      oldPath = `./uploads/doctors/${hospital.img}`;
+      deleteImg(oldPath);
+
+      hospital.img = archiveName;
+      await hospital.save();
+      return true;
     case "users":
-      break;
+      const user = await User.findById(id);
+      if (!user) {
+        console.log("No se encontró ningún user");
+        return false;
+      }
+
+      oldPath = `./uploads/users/${user.img}`;
+      deleteImg(oldPath);
+
+      user.img = archiveName;
+      await user.save();
+      return true;
 
     default:
       break;
