@@ -7,7 +7,7 @@ const { validateJWT } = require('../middlewares/validate-jwt');
 
 const router = Router();
 
-router.use(expressFileUpload());
+router.use(expressFileUpload());// NOs permite usar el .file en el controlador
 
 router.put('/:table/:id',validateJWT, fileUpload);
 
