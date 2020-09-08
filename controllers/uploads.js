@@ -1,5 +1,6 @@
 const { response } = require("express");
 const { v4: uuidv4 } = require("uuid");
+const { updateImg } = require("../helpers/update-img");
 
 const fileUpload = (req, res = response) => {
   const table = req.params.table;
@@ -57,7 +58,13 @@ const fileUpload = (req, res = response) => {
       });
     }
 
-    res.json({
+  // Actualizar base datos
+    
+    updateImg(table, id, archiveName);
+  
+  
+  
+  res.json({
       ok: true,
       archiveName,
       msg: "Archivo subido",
