@@ -1,6 +1,9 @@
 const { response } = require("express");
 const { v4: uuidv4 } = require("uuid");
 const { updateImg } = require("../helpers/update-img");
+const fs = require("fs");
+
+const path = require("path");
 
 const fileUpload = (req, res = response) => {
   const table = req.params.table;
@@ -58,13 +61,11 @@ const fileUpload = (req, res = response) => {
       });
     }
 
-  // Actualizar base datos
-    
+    // Actualizar base datos
+
     updateImg(table, id, archiveName);
-  
-  
-  
-  res.json({
+
+    res.json({
       ok: true,
       archiveName,
       msg: "Archivo subido",
@@ -72,6 +73,25 @@ const fileUpload = (req, res = response) => {
   });
 };
 
+const returnImg = (req, res = response) => {
+  const table = req.params.table;
+  const img = req.params.img;
+
+  const pathImg = path.join(__dirname, `../uploads/${table}/${img}`);
+  // __dirname me da la ubicación donde se encuentra la app desplegada
+
+  if (!fs.existsSync(pathImg)) {
+    const pathImg = path.join(__dirname, "../uploads/no-img.jpg");
+    res.sendFile(pathImg);
+  }else{
+    res.sendFile(pathImg);
+
+  }
+
+  // con sendFile manda el propio archivo de vuelta
+};
+
 module.exports = {
   fileUpload,
+  returnImg,
 };
