@@ -1,6 +1,6 @@
 const { response } = require("express");
 
-const Usuario = require("../models/user");
+const User = require("../models/user");
 
 const bcrypt = require("bcryptjs");
 const { createJWT } = require("../helpers/jwt");
@@ -10,7 +10,7 @@ const login = async (req, res = response) => {
 
   try {
     //Verificar email
-    const userDB = await Usuario.findOne({ email });
+    const userDB = await User.findOne({ email });
     if (!userDB) {
       return res.status(404).json({
         ok: false,

@@ -7,13 +7,12 @@ const getUsers = async (req, res) => {
   const from = Number(req.query.from) || 0; //paginación
 
   const [users, total] = await Promise.all([
-    Usuario.find({}, "name email role google img")
-           .skip(from)
-           .limit(5),
+    Usuario.find({}, "name email role google img").skip(from).limit(5),
 
     Usuario.countDocuments(),
   ]);
-// En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va a ser mas eficiente porque en vez de ejecutar ambas de manera secuencial lo harán de forma simultánea
+  // En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va 
+  // a ser mas eficiente porque en vez de ejecutar ambas de manera secuencial lo harán de forma simultánea
   /* const users = await Usuario
                       .find({}, "name email role google")
                       .skip( from )
@@ -84,7 +83,8 @@ const putUser = async (req, res = response) => {
 
     //Actualizaciones
     const { password, google, email, ...campos } = req.body;
-    //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
+    //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no    
+    //sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
 
     if (usuarioDB.email != email) {
       const existeEmail = await Usuario.findOne({ email });
@@ -95,7 +95,8 @@ const putUser = async (req, res = response) => {
         });
       }
     }
-    //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que no sobreescriban esos campos en la BD
+    //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que 
+    //no sobreescriban esos campos en la BD
     // delete campos.password;
     // delete campos.google;
     campos.email = email; // volvemos a meter el email ya tratado en el objeto
