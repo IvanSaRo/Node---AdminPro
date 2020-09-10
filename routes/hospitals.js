@@ -25,7 +25,9 @@ createHospital
 
 router.put('/:id',
 [ 
-  
+    validateJWT,
+    check('name', 'El nombre del hospital es necesario').not().isEmpty(),
+    validateFields
 ], 
 putHospital);
 

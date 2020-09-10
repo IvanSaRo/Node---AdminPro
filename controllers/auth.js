@@ -29,11 +29,11 @@ const login = async (req, res = response) => {
     }
 
     // Generar el Token (JWT)
-    const token = await createJWT( userDB.id );
+    const token = await createJWT(userDB.id);
 
     res.json({
       ok: true,
-      token
+      token,
     });
   } catch (error) {
     console.log(error);
@@ -42,27 +42,26 @@ const login = async (req, res = response) => {
       msg: "Hable con el adeministrador",
     });
   }
-}
+};
 
-const googleSignIn = async( req, res = response) => {
-
+const googleSignIn = async (req, res = response) => {
   const googleToken = req.body.token;
-  
+
   try {
-    const {name, email, picture} = await googleVerify( googleToken );
+    const { name, email, picture } = await googleVerify(googleToken);
     let user;
 
-    const userDB = await User.findOne({ email }); 
-    if( !userDB){
+    const userDB = await User.findOne({ email });
+    if (!userDB) {
       //no existe el usuario
-        user = new User({
+      user = new User({
         name,
         email,
-        password: '@@@',
+        password: "@@@",
         img: picture,
-        google: true
-      })
-    }else{
+        google: true,
+      });
+    } else {
       //existe el usuario
       user = userDB;
       user.google = true;
@@ -72,29 +71,38 @@ const googleSignIn = async( req, res = response) => {
     await user.save();
 
     //generamos JWT validado por nuestro back
-    const token = await createJWT( user.id );
+    const token = await createJWT(user.id);
 
-      
-    
     res.json({
       ok: true,
-      msg: 'Google SignIn',
-      token
-    })
+      msg: "Google SignIn",
+      token,
+    });
   } catch (error) {
     res.status(401).json({
       ok: false,
-      msg: 'Token erróneo',
-      
-    })
+      msg: "Token erróneo",
+    });
   }
-  
-  
-  
-  
-}
+};
+
+const renewToken = async(req, res = response) => {
+
+  const uid = req.uid;
+  console.log(req)
+
+  //generamos JWT validado por nuestro back
+  const token = await createJWT(uid);
+
+  res.json({
+    ok: true,
+    uid,
+    token
+  });
+};
 
 module.exports = {
   login,
-  googleSignIn
+  googleSignIn,
+  renewToken
 };
