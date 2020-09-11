@@ -18,7 +18,8 @@ const getUsers = async (req, res) => {
                       .skip( from )
                       .limit( 5 );
 
-  const total = await Usuario.countDocuments(); */
+ 
+                      const total = await Usuario.countDocuments(); */
 
   res.json({
     ok: true,
