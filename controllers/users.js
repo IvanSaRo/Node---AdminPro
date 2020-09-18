@@ -1,5 +1,5 @@
 const { response } = require("express"); // es un tipado por defecto para la res
-const Usuario = require("../models/user");
+const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const { createJWT } = require("../helpers/jwt");
 
@@ -7,9 +7,9 @@ const getUsers = async (req, res) => {
   const from = Number(req.query.from) || 0; //paginación
 
   const [users, total] = await Promise.all([
-    Usuario.find({}, "name email role google img").skip(from).limit(5),
+    User.find({}, "name email role google img").skip(from).limit(5),
 
-    Usuario.countDocuments(),
+    User.countDocuments(),
   ]);
   // En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va 
   // a ser mas eficiente porque en vez de ejecutar ambas de manera secuencial lo harán de forma simultánea
@@ -32,7 +32,7 @@ const createUser = async (req, res = response) => {
   const { email, password } = req.body;
   try {
     // comprobar si existe el email
-    const emailExists = await Usuario.findOne({ email });
+    const emailExists = await User.findOne({ email });
 
     if (emailExists) {
       return res.status(400).json({
@@ -41,7 +41,7 @@ const createUser = async (req, res = response) => {
       });
     }
 
-    const user = new Usuario(req.body);
+    const user = new User(req.body);
 
     //Encriptar contraseña
     const salt = bcrypt.genSaltSync();
@@ -71,7 +71,7 @@ const putUser = async (req, res = response) => {
   const uid = req.params.id;
   try {
     //hemos de comprobar que el usuario existe
-    const usuarioDB = await Usuario.findById(uid);
+    const usuarioDB = await User.findById(uid);
 
     if (!usuarioDB) {
       return res.status(404).json({
@@ -88,7 +88,7 @@ const putUser = async (req, res = response) => {
     //sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
 
     if (usuarioDB.email != email) {
-      const existeEmail = await Usuario.findOne({ email });
+      const existeEmail = await User.findOne({ email });
       if (existeEmail) {
         return res.status(400).json({
           ok: false,
@@ -102,7 +102,7 @@ const putUser = async (req, res = response) => {
     // delete campos.google;
     campos.email = email; // volvemos a meter el email ya tratado en el objeto
 
-    const usarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, {
+    const usarioActualizado = await User.findByIdAndUpdate(uid, campos, {
       new: true,
     });
 
@@ -122,7 +122,7 @@ const putUser = async (req, res = response) => {
 const deleteUser = async (req, res = response) => {
   const uid = req.params.id;
   try {
-    const usuarioDB = await Usuario.findById(uid);
+    const usuarioDB = await User.findById(uid);
 
     if (!usuarioDB) {
       return res.status(404).json({
@@ -131,7 +131,7 @@ const deleteUser = async (req, res = response) => {
       });
     }
 
-    await Usuario.findByIdAndDelete(uid);
+    await User.findByIdAndDelete(uid);
 
     res.json({
       ok: true,
