@@ -76,14 +76,16 @@ const fileUpload = (req, res = response) => {
 const returnImg = (req, res = response) => {
   const table = req.params.table;
   const img = req.params.img;
+  
 
   const pathImg = path.join(__dirname, `../uploads/${table}/${img}`);
   // __dirname me da la ubicación donde se encuentra la app desplegada
 
-  if (!fs.existsSync(pathImg)) {
-    const pathImg = path.join(__dirname, "../uploads/no-img.jpg");
+  
+  if (fs.existsSync(pathImg)) {
     res.sendFile(pathImg);
   }else{
+    const pathImg = path.join(__dirname, "../uploads/no-img.jpg");
     res.sendFile(pathImg);
 
   }

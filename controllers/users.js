@@ -100,7 +100,11 @@ const putUser = async (req, res = response) => {
     //no sobreescriban esos campos en la BD
     // delete campos.password;
     // delete campos.google;
-    campos.email = email; // volvemos a meter el email ya tratado en el objeto
+    if (!usuarioDB.google) {
+      // comprobamos que no sea un user con google y si lo es no actualizamos el email
+      campos.email = email; // volvemos a meter el email ya tratado en el objeto
+    }
+    
 
     const usarioActualizado = await User.findByIdAndUpdate(uid, campos, {
       new: true,
