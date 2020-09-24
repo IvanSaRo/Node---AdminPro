@@ -103,6 +103,11 @@ const putUser = async (req, res = response) => {
     if (!usuarioDB.google) {
       // comprobamos que no sea un user con google y si lo es no actualizamos el email
       campos.email = email; // volvemos a meter el email ya tratado en el objeto
+    }else if( usuarioDB.email){
+      return res.status(400).json({
+        ok: false,
+        msg: "No es posible cambiar el correo de un usuario de google",
+      });
     }
     
 
