@@ -77,7 +77,7 @@ const deleteDoctor = async (req, res = response) => {
     if (!doctor) {
       return res.status(404).json({
         ok: false,
-        msg: "Hospital no encontrado",
+        msg: "Doctor no encontrado",
       });
     }
 
