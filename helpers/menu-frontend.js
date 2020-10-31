@@ -19,7 +19,7 @@
         ]}
     ]
 
-    if(role === 'ADMNIN_ROLE'){
+    if(role === 'ADMIN_ROLE'){
         menu[1].submenu.unshift({ titulo: 'Usuarios', url: 'users'})
     }
 
