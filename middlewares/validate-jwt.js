@@ -65,4 +65,38 @@ const validateADMIN_ROLE = async (req, res, next) => {
   }
 };
 
-module.exports = { validateJWT, validateADMIN_ROLE };
+const validateADMIN_ROLE_or_SameUser = async (req, res, next) => {
+  const uid = req.uid;
+  const id = req.params.id;
+
+  try {
+    const userDB = await User.findById(uid);
+
+    if (!userDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: "Usuario no válido",
+      });
+    }
+
+    if (userDB.role === "ADMIN_ROLE" || uid === id) {
+      next();
+    } else {
+      return res.status(403).json({
+        ok: false,
+        msg: "No dispones de los privilegios necesarios",
+      });
+    }
+  } catch (error) {
+    res.status(400).json({
+      ok: false,
+      msg: "Hable con el administrador",
+    });
+  }
+};
+
+module.exports = {
+  validateJWT,
+  validateADMIN_ROLE,
+  validateADMIN_ROLE_or_SameUser,
+};
