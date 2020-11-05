@@ -7,8 +7,6 @@ const { createJWT } = require("../helpers/jwt");
 const { googleVerify } = require("../helpers/google-verify");
 const { getMenuFront } = require("../helpers/menu-frontend");
 
-
-
 const login = async (req, res = response) => {
   const { email, password } = req.body;
 
@@ -37,7 +35,7 @@ const login = async (req, res = response) => {
     res.json({
       ok: true,
       token,
-      menu: getMenuFront(userDB.role)
+      menu: getMenuFront(userDB.role),
     });
   } catch (error) {
     console.log(error);
@@ -81,7 +79,7 @@ const googleSignIn = async (req, res = response) => {
       ok: true,
       msg: "Google SignIn",
       token,
-      menu: getMenuFront(user.role)
+      menu: getMenuFront(user.role),
     });
   } catch (error) {
     res.status(401).json({
@@ -91,8 +89,7 @@ const googleSignIn = async (req, res = response) => {
   }
 };
 
-const renewToken = async(req, res = response) => {
-
+const renewToken = async (req, res = response) => {
   const uid = req.uid;
 
   //generamos JWT validado por nuestro back
@@ -106,13 +103,12 @@ const renewToken = async(req, res = response) => {
     ok: true,
     user,
     token,
-    menu: getMenuFront(user.role)
-
+    menu: getMenuFront(user.role),
   });
 };
 
 module.exports = {
   login,
   googleSignIn,
-  renewToken
+  renewToken,
 };

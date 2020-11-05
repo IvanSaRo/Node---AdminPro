@@ -1,5 +1,3 @@
-
-
 const { response } = require("express");
 
 const User = require("../models/user");
@@ -15,7 +13,7 @@ const getGeneral = async (req, res = response) => {
     Doctor.find({ name: regex }),
     Hospital.find({ name: regex }),
   ]);
-//  { $text: { name: regex, $diacriticSensitive: true } }
+  //  { $text: { name: regex, $diacriticSensitive: true } }
   res.json({
     ok: true,
     users,
@@ -31,27 +29,24 @@ const getFromTable = async (req, res = response) => {
 
   let data = [];
 
-  
   switch (table) {
     case "users":
-      data = await User.find({name: regex});
+      data = await User.find({ name: regex });
       break;
     case "hospitals":
-      data = await Hospital.find({ name: regex })
-                           .populate("user", "name img");
+      data = await Hospital.find({ name: regex }).populate("user", "name img");
       break;
     case "doctors":
       data = await Doctor.find({ name: regex })
-                         .populate("user", "name img")
-                         .populate("hospital", "name img");
+        .populate("user", "name img")
+        .populate("hospital", "name img");
       break;
     default:
       return res.status(400).json({
         ok: false,
         msg: "Error al encontrar la tabla",
       });
-
-}
+  }
 
   res.json({
     ok: true,

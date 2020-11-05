@@ -11,7 +11,7 @@ const getUsers = async (req, res) => {
 
     User.countDocuments(),
   ]);
-  // En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va 
+  // En vez de ejecutar las 2 órdenes async de abajo, que cargue una y luego la otra las metemos en Promise.All() ya que va
   // a ser mas eficiente porque en vez de ejecutar ambas de manera secuencial lo harán de forma simultánea
   /* const users = await Usuario
                       .find({}, "name email role google")
@@ -84,7 +84,7 @@ const putUser = async (req, res = response) => {
 
     //Actualizaciones
     const { password, google, email, ...campos } = req.body;
-    //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no    
+    //en vez de ocupar los deletes de abajo para quitar del objeto que voy a mandar en el put para que no
     //sobreescriban esos campos en la BD saco email, lo trato y lo vuelvo a meter en el objeto mas abajo
 
     if (usuarioDB.email != email) {
@@ -96,20 +96,19 @@ const putUser = async (req, res = response) => {
         });
       }
     }
-    //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que 
+    //estos deletes cumplen la funcion de borrar estas propiedades en el objeto que voy a mandar en el put para que
     //no sobreescriban esos campos en la BD
     // delete campos.password;
     // delete campos.google;
     if (!usuarioDB.google) {
       // comprobamos que no sea un user con google y si lo es no actualizamos el email
       campos.email = email; // volvemos a meter el email ya tratado en el objeto
-    }else if( usuarioDB.email){
+    } else if (usuarioDB.email) {
       return res.status(400).json({
         ok: false,
         msg: "No es posible cambiar el correo de un usuario de google",
       });
     }
-    
 
     const usarioActualizado = await User.findByIdAndUpdate(uid, campos, {
       new: true,

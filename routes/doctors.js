@@ -9,7 +9,7 @@ const {
   createDoctor,
   putDoctor,
   deleteDoctor,
-  getDoctorById
+  getDoctorById,
 } = require("../controllers/doctors");
 
 const router = Router();
@@ -21,24 +21,25 @@ router.post(
   [
     validateJWT,
     check("name", "El nombre del médico es necesario").not().isEmpty(),
-    check('hospital', 'El id del hospital ha de ser válido').isMongoId(),
+    check("hospital", "El id del hospital ha de ser válido").isMongoId(),
     validateFields,
   ],
   createDoctor
 );
 
-router.put("/:id", [
-  validateJWT,
+router.put(
+  "/:id",
+  [
+    validateJWT,
     check("name", "El nombre del doctor es necesario").not().isEmpty(),
-    check('hospital', 'El id del doctor ha de ser válido').isMongoId(),
+    check("hospital", "El id del doctor ha de ser válido").isMongoId(),
     validateFields,
-], 
-putDoctor
+  ],
+  putDoctor
 );
 
 router.delete("/:id", validateJWT, deleteDoctor);
 
 router.get("/:id", validateJWT, getDoctorById);
-
 
 module.exports = router;

@@ -16,7 +16,6 @@ const deleteImg = (path) => {
 const updateImg = async (table, id, archiveName) => {
   let oldPath = "";
 
-  
   switch (table) {
     case "doctors":
       const doctor = await Doctor.findById(id);
